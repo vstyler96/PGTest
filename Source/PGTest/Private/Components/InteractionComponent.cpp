@@ -21,12 +21,15 @@ UInteractionComponent::UInteractionComponent()
 void UInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 	
+	GetWorld()->GetTimerManager().SetTimer(InteractionTraceTimerHandle, 
+		this, 
+		&UInteractionComponent::FindBestInteractable, 
+		0.1f, 
+		true);
 }
 
-void UInteractionComponent::PrimaryInteract()
+void UInteractionComponent::FindBestInteractable()
 {
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
@@ -44,16 +47,20 @@ void UInteractionComponent::PrimaryInteract()
 	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
 	
 	AActor* HitActor = Hit.GetActor();
+	
+	FocusActor = nullptr;
 	if (HitActor)
 	{
 		if (HitActor->Implements<UGameplayInterface>())
 		{
-			APawn* MyPawn = Cast<APawn>(MyOwner);
-			if (MyPawn)
-			{
-				IGameplayInterface::Execute_Interact(HitActor, MyPawn);
-			}
+			FocusActor = HitActor;
 		}
+	}
+
+	if (IsValid(FocusActor))
+	{
+		FVector Center = EyeLocation + FVector(0.0f, 0.0f, 30.0f);
+		DrawDebugSphere(GetWorld(), Center, 10.0f, 20, FColor::Magenta, false, 0.1f, 0, 2.0f);
 	}
 	
 	if (bShowDebug)
@@ -63,13 +70,13 @@ void UInteractionComponent::PrimaryInteract()
 	}
 }
 
-
-// Called every frame
-void UInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                          FActorComponentTickFunction* ThisTickFunction)
+void UInteractionComponent::PrimaryInteract()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (FocusActor == nullptr) return;
 
-	// ...
+	APawn* MyPawn = Cast<APawn>(GetOwner());
+	if (MyPawn)
+	{
+		IGameplayInterface::Execute_Interact(FocusActor, MyPawn);
+	}
 }
-

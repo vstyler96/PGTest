@@ -19,14 +19,18 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	
+	void FindBestInteractable();
+	
+	FTimerHandle InteractionTraceTimerHandle;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
 	
 	void PrimaryInteract();
 	
 	UPROPERTY(EditAnywhere)
 	bool bShowDebug;
+	
+	UPROPERTY()
+	TObjectPtr<AActor> FocusActor;
 };
