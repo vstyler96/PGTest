@@ -52,6 +52,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* PrimaryInteractionAction;
+	
+	UFUNCTION(Server, Reliable)
+	void ServerInteract();
 
 public:
 

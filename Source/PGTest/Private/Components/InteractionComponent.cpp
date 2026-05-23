@@ -12,7 +12,7 @@ UInteractionComponent::UInteractionComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
+	
 	// ...
 }
 
@@ -22,11 +22,16 @@ void UInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	GetWorld()->GetTimerManager().SetTimer(InteractionTraceTimerHandle, 
+	// TODO: Arreglar FocusActor no replicandose correctamente.
+	APawn* MyPawn = Cast<APawn>(GetOwner());
+	if (MyPawn->IsLocallyControlled())
+	{
+		GetWorld()->GetTimerManager().SetTimer(InteractionTraceTimerHandle, 
 		this, 
 		&UInteractionComponent::FindBestInteractable, 
 		0.1f, 
 		true);
+	}
 }
 
 void UInteractionComponent::FindBestInteractable()

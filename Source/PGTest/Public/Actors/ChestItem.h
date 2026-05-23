@@ -16,11 +16,19 @@ public:
 	// Sets default values for this actor's properties
 	AChestItem();
 	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	UPROPERTY(EditAnywhere)
 	float TargetPitch = 120.0f;
 	
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(ReplicatedUsing=OnRep_LidOpened, EditDefaultsOnly)
 	bool bLidOpened;
+		
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	bool bCanUpdate = true;
+	
+	UFUNCTION()
+	void OnRep_LidOpened();
 	
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentLidPitch() const;

@@ -140,5 +140,10 @@ void APGTestCharacter::DoJumpEnd()
 
 void APGTestCharacter::PrimaryInteract()
 {
+	ServerInteract();
+}
+
+void APGTestCharacter::ServerInteract_Implementation()
+{
 	InteractionComp->PrimaryInteract();
 }

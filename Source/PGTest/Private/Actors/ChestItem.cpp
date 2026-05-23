@@ -3,6 +3,8 @@
 
 #include "Public/Actors/ChestItem.h"
 
+#include "Net/UnrealNetwork.h"
+
 
 // Sets default values
 AChestItem::AChestItem()
@@ -14,6 +16,17 @@ AChestItem::AChestItem()
 	LidMesh->SetupAttachment(BaseMesh);
 }
 
+void AChestItem::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AChestItem, bLidOpened);
+}
+
+void AChestItem::OnRep_LidOpened()
+{
+	UpdateLidChest();
+}
+
 float AChestItem::GetCurrentLidPitch() const
 {
 	return bLidOpened ? TargetPitch : 0.0f;
@@ -22,6 +35,10 @@ float AChestItem::GetCurrentLidPitch() const
 void AChestItem::Interact_Implementation(APawn* InstigatorPawn)
 {
 	IGameplayInterface::Interact_Implementation(InstigatorPawn);
+
+	if (!bCanUpdate) return;
+	bLidOpened = !bLidOpened;
+	UpdateLidChest();
 }
 
 // Called when the game starts or when spawned
@@ -32,5 +49,5 @@ void AChestItem::BeginPlay()
 
 void AChestItem::UpdateLidChest_Implementation()
 {
-	bLidOpened = !bLidOpened;
+	
 }
