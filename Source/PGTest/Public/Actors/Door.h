@@ -4,28 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Interfaces/GameplayInterface.h"
 #include "Door.generated.h"
 
 UCLASS()
-class PGTEST_API ADoor : public AActor, public IGameplayInterface
+class PGTEST_API ADoor : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
 	ADoor();
+	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(EditAnywhere)
 	float TargetYaw = 90.0f;
 	
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(ReplicatedUsing=OnRep_DoorOpened, EditDefaultsOnly)
 	bool bDoorOpened;
+	
+	UFUNCTION()
+	void OnRep_DoorOpened();
 	
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentDoorYaw() const;
-	
-	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 
 protected:
 	// Called when the game starts or when spawned

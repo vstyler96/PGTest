@@ -4,6 +4,7 @@
 #include "Public/Actors/WallLever.h"
 
 #include "Interfaces/GameplayInterface.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -16,6 +17,17 @@ AWallLever::AWallLever()
 	LeverMesh->SetupAttachment(BaseMesh);
 }
 
+void AWallLever::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AWallLever, bLeverOn);
+}
+
+void AWallLever::OnRep_LeverOn()
+{
+	UpdateLever();
+}
+
 float AWallLever::GetCurrentLeverPitch() const
 {
 	return bLeverOn ? TargetPitch : 140.0f;
@@ -24,6 +36,10 @@ float AWallLever::GetCurrentLeverPitch() const
 void AWallLever::Interact_Implementation(APawn* InstigatorPawn)
 {
 	IGameplayInterface::Interact_Implementation(InstigatorPawn);
+	
+	if (!bCanUpdate) return;
+	bLeverOn = !bLeverOn;
+	UpdateLever();
 }
 
 // Called when the game starts or when spawned
@@ -34,5 +50,5 @@ void AWallLever::BeginPlay()
 
 void AWallLever::UpdateLever_Implementation()
 {
-	bLeverOn = !bLeverOn;
+
 }

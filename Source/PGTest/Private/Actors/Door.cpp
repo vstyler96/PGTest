@@ -3,6 +3,8 @@
 
 #include "Public/Actors/Door.h"
 
+#include "Net/UnrealNetwork.h"
+
 
 // Sets default values
 ADoor::ADoor()
@@ -14,14 +16,20 @@ ADoor::ADoor()
 	DoorMesh->SetupAttachment(BaseMesh);
 }
 
+void ADoor::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ADoor, bDoorOpened);
+}
+
+void ADoor::OnRep_DoorOpened()
+{
+	UpdateDoor();
+}
+
 float ADoor::GetCurrentDoorYaw() const
 {
 	return bDoorOpened ? TargetYaw : 0.0f;
-}
-
-void ADoor::Interact_Implementation(APawn* InstigatorPawn)
-{
-	IGameplayInterface::Interact_Implementation(InstigatorPawn);
 }
 
 // Called when the game starts or when spawned

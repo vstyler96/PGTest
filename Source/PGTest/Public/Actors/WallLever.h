@@ -15,12 +15,20 @@ class PGTEST_API AWallLever : public AActor, public IGameplayInterface
 public:
 	// Sets default values for this actor's properties
 	AWallLever();
+	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(EditAnywhere)
 	float TargetPitch = 20.0f;
 	
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(ReplicatedUsing=OnRep_LeverOn, EditDefaultsOnly)
 	bool bLeverOn;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	bool bCanUpdate = true;
+	
+	UFUNCTION()
+	void OnRep_LeverOn();
 	
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentLeverPitch() const;

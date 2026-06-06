@@ -2,8 +2,8 @@
 
 
 #include "Components/InteractionComponent.h"
-#include "KismetTraceUtils.h"
 #include "Interfaces/GameplayInterface.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values for this component's properties
@@ -16,13 +16,17 @@ UInteractionComponent::UInteractionComponent()
 	// ...
 }
 
+void UInteractionComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UInteractionComponent, FocusActor);
+}
 
 // Called when the game starts
 void UInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// TODO: Arreglar FocusActor no replicandose correctamente.
 	APawn* MyPawn = Cast<APawn>(GetOwner());
 	if (MyPawn->IsLocallyControlled())
 	{
@@ -59,6 +63,7 @@ void UInteractionComponent::FindBestInteractable()
 		if (HitActor->Implements<UGameplayInterface>())
 		{
 			FocusActor = HitActor;
+			ServerUpdateFocusActor(HitActor);
 		}
 	}
 
@@ -73,6 +78,12 @@ void UInteractionComponent::FindBestInteractable()
 		FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
 		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 3.0f, 0, 2.0f);
 	}
+}
+
+void UInteractionComponent::ServerUpdateFocusActor_Implementation(AActor* HitActor)
+{
+	if (HitActor == nullptr) return;
+	FocusActor = HitActor;
 }
 
 void UInteractionComponent::PrimaryInteract()

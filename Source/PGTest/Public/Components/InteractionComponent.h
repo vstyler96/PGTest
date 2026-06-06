@@ -15,6 +15,8 @@ class PGTEST_API UInteractionComponent : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UInteractionComponent();
+	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 protected:
 	// Called when the game starts
@@ -23,6 +25,9 @@ protected:
 	void FindBestInteractable();
 	
 	FTimerHandle InteractionTraceTimerHandle;
+	
+	UFUNCTION(Server, Reliable)
+	void ServerUpdateFocusActor(AActor* HitActor);
 
 public:
 	
@@ -31,6 +36,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool bShowDebug;
 	
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	TObjectPtr<AActor> FocusActor;
 };
