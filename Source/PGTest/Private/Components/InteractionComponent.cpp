@@ -70,7 +70,27 @@ void UInteractionComponent::FindBestInteractable()
 	if (IsValid(FocusActor))
 	{
 		FVector Center = EyeLocation + FVector(0.0f, 0.0f, 30.0f);
-		DrawDebugSphere(GetWorld(), Center, 10.0f, 20, FColor::Magenta, false, 0.1f, 0, 2.0f);
+		//DrawDebugSphere(GetWorld(), Center, 10.0f, 20, FColor::Magenta, false, 0.1f, 0, 2.0f);
+		if (DefaultWidgetInteraction == nullptr)
+		{
+			DefaultWidgetInteraction = CreateWidget<UWorldUserWidget>(GetWorld(), DefaultWidgetClass);
+		}
+
+		if (DefaultWidgetInteraction)
+		{
+			DefaultWidgetInteraction->AttachedActor = FocusActor;
+			if (!DefaultWidgetInteraction->IsInViewport())
+			{
+				DefaultWidgetInteraction->AddToViewport();
+			}
+		}
+	}
+	else
+	{
+		if (DefaultWidgetInteraction)
+		{
+			DefaultWidgetInteraction->RemoveFromParent();
+		}
 	}
 	
 	if (bShowDebug)

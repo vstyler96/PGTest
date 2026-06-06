@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Widgets/WorldUserWidget.h"
 #include "InteractionComponent.generated.h"
 
 
@@ -28,6 +29,13 @@ protected:
 	
 	UFUNCTION(Server, Reliable)
 	void ServerUpdateFocusActor(AActor* HitActor);
+	
+	// Widget
+	UPROPERTY(EditDefaultsOnly, Category="UI")
+	TSubclassOf<UWorldUserWidget> DefaultWidgetClass;
+	
+	UPROPERTY(BlueprintReadOnly, Category="UI")
+	TObjectPtr<UWorldUserWidget> DefaultWidgetInteraction;
 
 public:
 	
