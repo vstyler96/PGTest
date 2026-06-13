@@ -18,6 +18,11 @@ public:
 	
 	/** Constructor */
 	APGTestGameMode();
+	
+	void CompleteMission(APawn* MyPawn);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="GameMode")
+	void OnMissionComplete(APawn* MyPawn);
 };
 
 
