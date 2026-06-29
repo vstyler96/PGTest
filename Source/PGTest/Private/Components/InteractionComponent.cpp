@@ -28,7 +28,7 @@ void UInteractionComponent::BeginPlay()
 	Super::BeginPlay();
 	
 	APawn* MyPawn = Cast<APawn>(GetOwner());
-	if (MyPawn->IsLocallyControlled())
+	if (MyPawn && MyPawn->IsLocallyControlled())
 	{
 		GetWorld()->GetTimerManager().SetTimer(InteractionTraceTimerHandle, 
 		this, 

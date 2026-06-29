@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "PGTest.h"
 #include "Components/InteractionComponent.h"
+#include "Net/UnrealNetwork.h"
 
 APGTestCharacter::APGTestCharacter()
 {
@@ -51,6 +52,12 @@ APGTestCharacter::APGTestCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+}
+
+void APGTestCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(APGTestCharacter, bHasKey);
 }
 
 void APGTestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

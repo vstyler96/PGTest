@@ -14,6 +14,8 @@ class PGTEST_API UInteractionComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
+	virtual void BeginPlay() override;
+	
 	// Sets default values for this component's properties
 	UInteractionComponent();
 	
@@ -21,7 +23,6 @@ public:
 
 protected:
 	// Called when the game starts
-	virtual void BeginPlay() override;
 	
 	void FindBestInteractable();
 	

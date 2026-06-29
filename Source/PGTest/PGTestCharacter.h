@@ -59,7 +59,13 @@ protected:
 public:
 
 	/** Constructor */
-	APGTestCharacter();	
+	APGTestCharacter();
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
+	/** True si el jugador agarró la llave. Replicada para validar en el servidor */
+	UPROPERTY(Replicated, BlueprintReadWrite, Category="Inventory")
+	bool bHasKey = false;
 
 protected:
 

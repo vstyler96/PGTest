@@ -5,6 +5,7 @@
 
 #include "Interfaces/GameplayInterface.h"
 #include "Net/UnrealNetwork.h"
+#include "PGTestCharacter.h"
 
 
 // Sets default values
@@ -36,8 +37,20 @@ float AWallLever::GetCurrentLeverPitch() const
 void AWallLever::Interact_Implementation(APawn* InstigatorPawn)
 {
 	IGameplayInterface::Interact_Implementation(InstigatorPawn);
-	
+
 	if (!bCanUpdate) return;
+
+	// Validación: si la palanca requiere llave, el pawn que interactúa debe tenerla
+	if (bRequiresKey)
+	{
+		APGTestCharacter* Character = Cast<APGTestCharacter>(InstigatorPawn);
+		if (!Character || !Character->bHasKey)
+		{
+			// Sin llave: no se acciona (acá podés disparar feedback de "necesitás la llave")
+			return;
+		}
+	}
+
 	bLeverOn = !bLeverOn;
 	UpdateLever();
 }

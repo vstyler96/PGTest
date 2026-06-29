@@ -26,6 +26,10 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 	bool bCanUpdate = true;
+
+	// Si es true, el jugador necesita tener la llave (bHasKey) para accionar la palanca
+	UPROPERTY(EditAnywhere, Category="Interactable")
+	bool bRequiresKey = true;
 	
 	UFUNCTION()
 	void OnRep_LeverOn();
